@@ -10,15 +10,19 @@ import {
 } from "./ui/card";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useState } from "react";
+import { Input } from "./ui/input";
 
 export function ColumnContainer({
   column,
   deleteColumn,
+  updateColumn,
 }: {
   column: Column;
   deleteColumn: (id: Id) => void;
+  updateColumn: (id: Id, title: string) => void;
 }) {
-  const { id, title, tasks } = column;
+  const [editMode, setEditMode] = useState(false);
 
   const {
     setNodeRef,
@@ -28,11 +32,12 @@ export function ColumnContainer({
     transition,
     isDragging,
   } = useSortable({
-    id,
+    id: column.id,
     data: {
       type: "Column",
       column,
     },
+    disabled: editMode,
   });
 
   const style = {
@@ -59,14 +64,34 @@ export function ColumnContainer({
         className="flex-row items-center justify-between rounded-lg border-4 border-slate-900 bg-slate-950 p-3"
         {...attributes}
         {...listeners}
+        onClick={() => setEditMode(true)}
       >
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-slate-900 px-3.5 py-2">
-            {tasks.length}
+            {column.tasks.length}
           </div>
-          <CardTitle className="text-lg">{title}</CardTitle>
+          {!editMode && (
+            <CardTitle className="text-lg">{column.title}</CardTitle>
+          )}
+          {editMode && (
+            <Input
+              className="text-lg"
+              value={column.title}
+              onChange={(e) => updateColumn(column.id, e.target.value)}
+              autoFocus
+              onBlur={() => setEditMode(false)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter") return;
+                setEditMode(false);
+              }}
+            />
+          )}
         </div>
-        <Button size="icon" variant="ghost" onClick={() => deleteColumn(id)}>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => deleteColumn(column.id)}
+        >
           <X />
         </Button>
       </CardHeader>
