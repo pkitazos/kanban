@@ -23,14 +23,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} bg-background`}>
+      <body className={`font-sans ${inter.variable} bg-slate-500`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-10">
+              {children}
+            </div>
+          </TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

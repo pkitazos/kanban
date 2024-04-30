@@ -1,9 +1,11 @@
 "use client";
 
 import { ColumnContainer } from "@/components/column-container";
+import { TaskCard } from "@/components/task-card";
 import { Button } from "@/components/ui/button";
 import {
   DndContext,
+  type DragOverEvent,
   DragOverlay,
   PointerSensor,
   useSensor,
@@ -12,7 +14,7 @@ import {
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
+import { CirclePlus as CirclePLusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -21,19 +23,31 @@ export type Id = string | number;
 export type Column = {
   id: Id;
   title: string;
-  tasks: Task[];
 };
 
-type Task = {
+export type Task = {
+  id: Id;
+  columnId: Id;
   title: string;
-  action: string;
+  content: string;
 };
 
-export function KanbanBoard() {
-  const [columns, setColumns] = useState<Column[]>([]);
+type KanbanBoardProps = {
+  initialColumns?: Column[];
+  initialTasks?: Task[];
+};
+
+export function KanbanBoard({
+  initialColumns = [],
+  initialTasks = [],
+}: KanbanBoardProps) {
+  const [columns, setColumns] = useState<Column[]>(initialColumns);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
   const columnIds = useMemo(() => columns.map((col) => col.id), [columns]);
 
-  const [activeColumn, setActiveColum] = useState<Column | null>();
+  const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -44,60 +58,77 @@ export function KanbanBoard() {
   );
 
   return (
-    <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-10">
-      <DndContext
-        sensors={sensors}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-      >
-        <div className="m-auto flex gap-4">
-          <div className="flex gap-4">
-            <SortableContext items={columnIds}>
-              {columns.map((col) => (
-                <ColumnContainer
-                  key={col.id}
-                  column={col}
-                  deleteColumn={deleteColumn}
-                  updateColumn={updateColumn}
-                />
-              ))}
-            </SortableContext>
-          </div>
-          <Button
-            className="flex items-center gap-2"
-            size="lg"
-            onClick={createNewColumn}
-          >
-            <Plus /> Add Column
-          </Button>
-        </div>
-        {createPortal(
-          <DragOverlay>
-            {activeColumn && (
+    <DndContext
+      sensors={sensors}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+    >
+      <div className="m-auto flex gap-4">
+        <div className="flex gap-4">
+          <SortableContext items={columnIds}>
+            {columns.map((col) => (
               <ColumnContainer
-                column={activeColumn}
+                key={col.id}
+                column={col}
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
+                createTask={createTask}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
+                tasks={tasks.filter((t) => t.columnId === col.id)}
               />
-            )}
-          </DragOverlay>,
-          document.body,
-        )}
-      </DndContext>
-    </div>
+            ))}
+          </SortableContext>
+        </div>
+        <Button
+          className="flex w-[350px] flex-row items-center justify-start gap-2.5 space-y-1.5 rounded-lg border-4 border-slate-900 bg-slate-950 px-3 py-8 text-base"
+          variant="secondary"
+          size="lg"
+          onClick={createColumn}
+        >
+          <CirclePLusIcon className="h-5 w-5" /> Add Column
+        </Button>
+      </div>
+      {createPortal(
+        <DragOverlay>
+          {activeColumn && (
+            <ColumnContainer
+              column={activeColumn}
+              deleteColumn={deleteColumn}
+              updateColumn={updateColumn}
+              createTask={createTask}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+              tasks={tasks.filter((t) => t.columnId === activeColumn.id)}
+            />
+          )}
+          {activeTask && (
+            <TaskCard
+              task={activeTask}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
+          )}
+        </DragOverlay>,
+        document.body,
+      )}
+    </DndContext>
   );
 
-  function createNewColumn() {
+  function createColumn() {
     const newColumn: Column = {
       id: generateId(),
       title: `Column ${columns.length + 1}`,
-      tasks: [],
     };
     setColumns([...columns, newColumn]);
   }
 
   function deleteColumn(id: Id) {
     setColumns((prev) => prev.filter((s) => s.id !== id));
+
+    const newTasks = tasks.filter((t) => t.columnId !== id);
+    setTasks(newTasks);
   }
 
   function updateColumn(id: Id, title: string) {
@@ -109,16 +140,48 @@ export function KanbanBoard() {
     setColumns(newColumns);
   }
 
+  function createTask(columnId: Id) {
+    const newTask: Task = {
+      id: generateId(),
+      columnId,
+      title: `Task ${tasks.length + 1}`,
+      content: "",
+    };
+
+    setTasks([...tasks, newTask]);
+  }
+
+  function deleteTask(id: Id) {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  }
+
+  function updateTask(id: Id, title: string) {
+    const newTasks = tasks.map((task) => {
+      if (task.id !== id) return task;
+      return { ...task, title };
+    });
+
+    setTasks(newTasks);
+  }
+
   function onDragStart({ active }: DragStartEvent) {
-    console.log("DRAG START");
     if (active.data.current?.type === "Column") {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setActiveColum(active.data.current.column);
+      const selectedColumn = active.data.current.column as unknown as Column;
+      setActiveColumn(selectedColumn);
+      return;
+    }
+
+    if (active.data.current?.type === "Task") {
+      const selectedTask = active.data.current.task as unknown as Task;
+      setActiveTask(selectedTask);
       return;
     }
   }
 
   function onDragEnd({ active, over }: DragEndEvent) {
+    setActiveColumn(null);
+    setActiveTask(null);
+
     if (!over) return;
 
     const activeColId = active.id;
@@ -127,19 +190,58 @@ export function KanbanBoard() {
     if (activeColId === overColId) return;
 
     setColumns((columns) => {
-      const activeColIdx = findColIndex(columns, activeColId);
-      const overColIdx = findColIndex(columns, overColId);
+      const activeColIdx = findIndex(columns, activeColId);
+      const overColIdx = findIndex(columns, overColId);
 
       return arrayMove(columns, activeColIdx, overColIdx);
     });
   }
+
+  function onDragOver({ active, over }: DragOverEvent) {
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    const isActiveTask = active.data.current?.type === "Task";
+    const isOverTask = over.data.current?.type === "Task";
+
+    if (!isActiveTask) return;
+
+    // dropping a task over another task
+    if (isActiveTask && isOverTask) {
+      setTasks((tasks) => {
+        const activeIdx = findIndex(tasks, activeId);
+        const overIdx = findIndex(tasks, overId);
+
+        tasks[activeIdx]!.columnId = tasks[overIdx]!.columnId;
+
+        return arrayMove(tasks, activeIdx, overIdx);
+      });
+    }
+
+    const isOverColumn = over.data.current?.type === "Column";
+    // dropping a task over a column
+
+    if (isActiveTask && isOverColumn) {
+      setTasks((tasks) => {
+        const activeIdx = findIndex(tasks, activeId);
+
+        tasks[activeIdx]!.columnId = overId;
+
+        return arrayMove(tasks, activeIdx, activeIdx);
+      });
+    }
+  }
 }
 
-function generateId() {
-  // get actual unique id
+export function generateId() {
+  // TODO: get actual unique id
   return Math.floor(Math.random() * 10001);
 }
 
-function findColIndex(columns: Column[], id: Id) {
-  return columns.findIndex((col) => col.id === id);
+function findIndex<T extends { id: Id }>(data: T[], id: Id) {
+  return data.findIndex((e) => e.id === id);
 }

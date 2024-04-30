@@ -1,6 +1,6 @@
-import { X } from "lucide-react";
+import { CirclePlus as CirclePlusIcon, X as XIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { type Id, type Column } from "@/app/kanban-board";
+import { type Id, type Column, type Task } from "@/app/kanban-board";
 import {
   Card,
   CardContent,
@@ -8,20 +8,30 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Input } from "./ui/input";
+import { TaskCard } from "./task-card";
 
 export function ColumnContainer({
   column,
+  tasks,
   deleteColumn,
   updateColumn,
+  createTask,
+  deleteTask,
+  updateTask,
 }: {
   column: Column;
+  tasks: Task[];
   deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
+  createTask: (columnId: Id) => void;
+  deleteTask: (id: Id) => void;
+  updateTask: (id: Id, title: string) => void;
 }) {
+  const taskIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
   const [editMode, setEditMode] = useState(false);
 
   const {
@@ -58,7 +68,7 @@ export function ColumnContainer({
     <Card
       ref={setNodeRef}
       style={style}
-      className="h-[500px] max-h-[500px] w-[350px] bg-slate-900"
+      className="flex h-[500px] max-h-[500px] w-[350px] flex-col bg-slate-900"
     >
       <CardHeader
         className="flex-row items-center justify-between rounded-lg border-4 border-slate-900 bg-slate-950 p-3"
@@ -68,7 +78,7 @@ export function ColumnContainer({
       >
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-slate-900 px-3.5 py-2">
-            {column.tasks.length}
+            {tasks.length}
           </div>
           {!editMode && (
             <CardTitle className="text-lg">{column.title}</CardTitle>
@@ -92,11 +102,34 @@ export function ColumnContainer({
           variant="ghost"
           onClick={() => deleteColumn(column.id)}
         >
-          <X />
+          <XIcon />
         </Button>
       </CardHeader>
-      <CardContent className="flex-grow">content</CardContent>
-      <CardFooter>footer</CardFooter>
+      <CardContent className="flex flex-grow flex-col gap-4 overflow-y-auto overflow-x-hidden p-2">
+        <SortableContext items={taskIds}>
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
+          ))}
+        </SortableContext>
+      </CardContent>
+      <CardFooter className="p-2">
+        <Button
+          className="flex w-full items-center justify-start gap-2 px-3 py-8"
+          size="lg"
+          variant="ghost"
+          onClick={() => {
+            createTask(column.id);
+          }}
+        >
+          <CirclePlusIcon className="h-4 w-4" />
+          Add Task
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

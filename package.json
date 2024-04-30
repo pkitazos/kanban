@@ -9,7 +9,8 @@
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test-parse": "tsx src/lib/scripts/read.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.7.0",
@@ -19,6 +20,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.25.0",
+    "@total-typescript/ts-reset": "^0.5.1",
     "@trpc/client": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
@@ -30,6 +32,7 @@
     "next-auth": "^4.24.6",
     "next-themes": "^0.3.0",
     "postgres": "^3.4.3",
+    "purify-ts": "^2.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "server-only": "^0.0.1",
@@ -54,6 +57,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.7.3",
     "typescript": "^5.4.2"
   },
   "ct3aMetadata": {
