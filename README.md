@@ -1,29 +1,19 @@
-# Create T3 App
+# Kanban Board N.0 - todoer
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Guys I had this great idea, what If I made my own todo app, then I'd finally be productive!
 
-## What's next? How do I make an app with this?
+## TODO
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- add save button that writes changes back into markdown
+- add state management to handle multiple boards
+- add task content view
+- render markdown formatting of task content properly (bold, italics, etc.)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Future Ideas
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- add tags and priority to tasks
+- add text editor to create boards in the app itself
 
-## Learn More
+## Distant Future Ideas
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- turn this into a Tauri app, on launch you choose a directory (similar to how you choose a vault in Obsidian) and all the valid board files will be displayed as Kanban Boards, making changes to the board, will save the changes to the markdown files locally
