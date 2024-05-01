@@ -1,8 +1,10 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { generateKanban, generateTokens } from "@/parser/parser";
 import { useState } from "react";
-import { KanbanBoard, type Column, type Task } from "./kanban-board";
+
+import { KanbanBoard } from "@/components/kanban-board";
+import { Input } from "@/components/ui/input";
+import { generateBoardData, generateTokenStream } from "@/lib/compiler";
+import { type Column, type Task } from "@/lib/types";
 
 export default function Home() {
   const [board, setBoard] = useState(false);
@@ -22,8 +24,8 @@ export default function Home() {
       if (typeof text === "string") {
         const lines = text.split("\n");
 
-        const allTokens = generateTokens(lines);
-        const { heading, columns, tasks } = generateKanban(allTokens);
+        const tokenStream = generateTokenStream(lines);
+        const { heading, columns, tasks } = generateBoardData(tokenStream);
 
         setHeading(heading);
         setColumns(columns);

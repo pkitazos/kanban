@@ -1,5 +1,7 @@
+import { type Column, type Task } from "@/components/kanban-board";
+
 export type Token = {
-  type: Expr;
+  type: ExprType;
   value: string;
 };
 
@@ -12,11 +14,17 @@ export const EXPR = {
 
 type ObjectValues<T> = T[keyof T];
 
-export type Expr = ObjectValues<typeof EXPR>;
+export type ExprType = ObjectValues<typeof EXPR>;
 
 // TODO: rename this type
-export type TokenPattern = {
-  type: Expr;
+export type ExprPattern = {
+  type: ExprType;
   exprPattern: RegExp;
   valPatterns: RegExp[];
+};
+
+export type BoardData = {
+  heading: string;
+  columns: Column[];
+  tasks: Task[];
 };

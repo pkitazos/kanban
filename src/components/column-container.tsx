@@ -1,6 +1,11 @@
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { CirclePlus as CirclePlusIcon, X as XIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+
+import { type Column, type Id, type Task } from "@/lib/types";
+import { TaskCard } from "./task-card";
 import { Button } from "./ui/button";
-import { type Id, type Column, type Task } from "@/app/kanban-board";
 import {
   Card,
   CardContent,
@@ -8,11 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { useMemo, useState } from "react";
 import { Input } from "./ui/input";
-import { TaskCard } from "./task-card";
 
 export function ColumnContainer({
   column,

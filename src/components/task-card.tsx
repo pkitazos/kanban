@@ -1,10 +1,11 @@
-import { type Id, type Task } from "@/app/kanban-board";
-import { X as XIcon } from "lucide-react";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Card, CardTitle } from "./ui/card";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { X as XIcon } from "lucide-react";
+import { useState } from "react";
+
+import { type Id, type Task } from "@/lib/types";
+import { Button } from "./ui/button";
+import { Card, CardTitle } from "./ui/card";
 
 export function TaskCard({
   task,

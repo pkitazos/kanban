@@ -1,16 +1,13 @@
 "use client";
 
-import { ColumnContainer } from "@/components/column-container";
-import { TaskCard } from "@/components/task-card";
-import { Button } from "@/components/ui/button";
 import {
   DndContext,
-  type DragOverEvent,
   DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragOverEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
@@ -18,19 +15,10 @@ import { CirclePlus as CirclePLusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
-export type Id = string | number;
-
-export type Column = {
-  id: Id;
-  title: string;
-};
-
-export type Task = {
-  id: Id;
-  columnId: Id;
-  title: string;
-  content: string;
-};
+import { ColumnContainer } from "@/components/column-container";
+import { TaskCard } from "@/components/task-card";
+import { Button } from "@/components/ui/button";
+import { type Column, type Id, type Task } from "@/lib/types";
 
 type KanbanBoardProps = {
   initialColumns?: Column[];
