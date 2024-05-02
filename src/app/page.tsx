@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
 
 import { KanbanBoard } from "@/components/kanban-board";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateBoardData, generateTokenStream } from "@/lib/compiler";
 import { type Column, type Task } from "@/lib/types";
+import { invoke } from "@tauri-apps/api";
+import { useState } from "react";
 
 export default function Home() {
   const [board, setBoard] = useState(false);
@@ -40,8 +42,15 @@ export default function Home() {
     };
   }
 
+  async function handleClick() {
+    await invoke("greet", { name: "World" }).then((response) =>
+      console.log(response),
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
+      <Button onClick={handleClick}>hello</Button>
       <Input
         type="file"
         accept="txt"

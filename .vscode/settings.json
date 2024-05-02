@@ -2,6 +2,7 @@
   "cSpell.words": ["Kanban"],
   "material-icon-theme.folders.associations": {
     "compiler": "generator",
-    "trpc": "controller"
+    "trpc": "controller",
+    "src-tauri": "stack"
   }
 }
