@@ -1,4 +1,4 @@
-import { type Column, type Task } from "@/components/kanban-board";
+import { type Column, type Task } from "@/lib/types";
 
 export type Token = {
   type: ExprType;
