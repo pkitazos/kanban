@@ -4,15 +4,13 @@ import { KanbanBoard } from "@/components/kanban-board";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateBoardData, generateTokenStream } from "@/lib/compiler";
-import { type Column, type Task } from "@/lib/types";
+import { writeToFile } from "@/lib/compiler/decompiler";
+import { type BoardData } from "@/lib/types/token";
 import { invoke } from "@tauri-apps/api";
 import { useState } from "react";
 
 export default function Home() {
-  const [board, setBoard] = useState(false);
-  const [heading, setHeading] = useState("Untitled");
-  const [columns, setColumns] = useState<Column[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [board, setBoard] = useState<BoardData | null>(null);
 
   function handleFileLoad(files: FileList | null) {
     if (!files) return;
@@ -27,17 +25,11 @@ export default function Home() {
         const lines = text.split("\n");
 
         const tokenStream = generateTokenStream(lines);
-        const { heading, columns, tasks } = generateBoardData(tokenStream);
+        const data = generateBoardData(tokenStream);
 
-        setHeading(heading);
-        setColumns(columns);
-        setTasks(tasks);
-        setBoard(true);
+        setBoard(data);
       } else {
-        setHeading("Untitled");
-        setColumns([]);
-        setTasks([]);
-        setBoard(false);
+        setBoard(null);
       }
     };
   }
@@ -48,9 +40,18 @@ export default function Home() {
     );
   }
 
+  function handleSave(data: BoardData) {
+    const fileContent = writeToFile(data);
+    console.log(fileContent);
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      <Button onClick={handleClick}>hello</Button>
+      <Button disabled={!board} onClick={() => handleSave(board!)}>
+        write out
+      </Button>
+
+      <Button onClick={handleClick}>greet</Button>
       <Input
         type="file"
         accept="txt"
@@ -58,8 +59,11 @@ export default function Home() {
       />
       {board && (
         <div className="flex flex-col gap-3">
-          <h2 className="text-xl">{heading}</h2>
-          <KanbanBoard initialColumns={columns} initialTasks={tasks} />
+          <h2 className="text-xl">{board.heading}</h2>
+          <KanbanBoard
+            initialColumns={board.columns}
+            initialTasks={board.tasks}
+          />
         </div>
       )}
     </div>

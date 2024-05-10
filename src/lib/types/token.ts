@@ -1,5 +1,3 @@
-import { type Column, type Task } from "@/lib/types";
-
 export type Token = {
   type: ExprType;
   value: string;
@@ -21,10 +19,4 @@ export type ExprPattern = {
   type: ExprType;
   exprPattern: RegExp;
   valPatterns: RegExp[];
-};
-
-export type BoardData = {
-  heading: string;
-  columns: Column[];
-  tasks: Task[];
 };

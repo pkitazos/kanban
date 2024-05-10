@@ -1,4 +1,4 @@
-import { EXPR, type ExprType, type Token, type ExprPattern } from "./type";
+import { EXPR, type ExprType, type Token, type ExprPattern } from "./token";
 
 // check if a line matches a particular expression
 const _HEADING_EXP = /^#+\s(.+)$/;

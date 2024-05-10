@@ -1,6 +1,14 @@
-import { generateId, type Column, type Task } from "@/components/kanban-board";
-import { COLUMN, HEADING, TASK, checkType } from "./token";
-import { type BoardData, type Token } from "./type";
+import { generateId } from "@/components/kanban-board";
+import {
+  COLUMN,
+  HEADING,
+  TASK,
+  checkType,
+  type BoardData,
+  type Column,
+  type Task,
+  type Token,
+} from "@/lib/types";
 
 // TODO: make more informative syntactic error messages (include line number, line content, and more descriptive message)
 
@@ -24,6 +32,7 @@ export function generateBoardData(allTokens: Token[][]): BoardData {
   let currentColIdx = 0;
   for (const line of remainingTokens) {
     if (checkType(line, COLUMN.type)) {
+      // TODO: add order of column in board
       const token = getToken(line);
       const newColumn = makeColumn(token);
       currentColIdx = columns.length;
@@ -31,6 +40,7 @@ export function generateBoardData(allTokens: Token[][]): BoardData {
       continue;
     }
     if (checkType(line, TASK.type)) {
+      // TODO: add order of task in column
       const tokens = getTokenPair(line);
       const newTask = makeTask(columns[currentColIdx]!, tokens);
       tasks.push(newTask);

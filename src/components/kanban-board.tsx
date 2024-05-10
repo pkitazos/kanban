@@ -1,5 +1,9 @@
 "use client";
 
+import { ColumnContainer } from "@/components/column-container";
+import { TaskCard } from "@/components/task-card";
+import { Button } from "@/components/ui/button";
+import { type Column, type Id, type Task } from "@/lib/types/board";
 import {
   DndContext,
   DragOverlay,
@@ -14,11 +18,6 @@ import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { CirclePlus as CirclePLusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-
-import { ColumnContainer } from "@/components/column-container";
-import { TaskCard } from "@/components/task-card";
-import { Button } from "@/components/ui/button";
-import { type Column, type Id, type Task } from "@/lib/types";
 
 type KanbanBoardProps = {
   initialColumns?: Column[];

@@ -1,5 +1,5 @@
-import { HEADING, COLUMN, TASK } from "./token";
-import { type Token, type ExprPattern } from "./type";
+import { HEADING, COLUMN, TASK } from "../types/expression";
+import { type Token, type ExprPattern } from "../types/token";
 
 export function getExprVal(line: string, pattern: RegExp) {
   const match = pattern.exec(line);

@@ -1,11 +1,10 @@
-import { type BoardData } from "./type";
-import { type Column, type Task } from "@/lib/types";
+import { type BoardData, type Column, type Task } from "@/lib/types/board";
 
 export function writeToFile(data: BoardData) {
   const { heading, columns, tasks } = data;
 
   const lines = [
-    heading,
+    headingToString(heading),
     ...columns.flatMap((col) => [
       columnToString(col),
       ...tasks.filter((t) => t.columnId === col.id).map(taskToString),
@@ -13,6 +12,10 @@ export function writeToFile(data: BoardData) {
   ];
 
   return lines.join("\n");
+}
+
+function headingToString(heading: string) {
+  return `# ${heading}`;
 }
 
 function columnToString(column: Column) {
