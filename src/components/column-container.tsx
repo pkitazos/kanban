@@ -74,7 +74,7 @@ export function ColumnContainer({
         className="flex-row items-center justify-between rounded-lg border-4 border-slate-900 bg-slate-950 p-3"
         {...attributes}
         {...listeners}
-        onClick={() => setEditMode(true)}
+        onDoubleClick={() => setEditMode(true)}
       >
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-slate-900 px-3.5 py-2">

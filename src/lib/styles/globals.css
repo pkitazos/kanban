@@ -84,5 +84,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-xl bg-accent;
+  @apply rounded-xl bg-slate-600;
 }

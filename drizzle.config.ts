@@ -1,6 +1,5 @@
-import { type Config } from "drizzle-kit";
-
 import { env } from "@/env";
+import { type Config } from "drizzle-kit";
 
 export default {
   schema: "./src/server/db/schema.ts",
@@ -8,5 +7,5 @@ export default {
   dbCredentials: {
     connectionString: env.DATABASE_URL,
   },
-  tablesFilter: ["todoer_*"],
+  tablesFilter: ["kanban_*"],
 } satisfies Config;

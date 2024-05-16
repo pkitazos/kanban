@@ -87,7 +87,7 @@ export function TaskCard({
       className="relative flex h-[100px] min-h-[100px] cursor-grab flex-row items-center p-2.5 text-left hover:ring-2 hover:ring-inset hover:ring-accent"
       onMouseEnter={() => setMouseOver(true)}
       onMouseLeave={() => setMouseOver(false)}
-      onClick={toggleEditMode}
+      onDoubleClick={toggleEditMode}
     >
       <CardTitle className="text-base">{task.title}</CardTitle>
       {mouseOver && (

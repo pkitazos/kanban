@@ -107,6 +107,7 @@ export function KanbanBoard({
     const newColumn: Column = {
       id: generateId(),
       title: `Column ${columns.length + 1}`,
+      order: columns.length + 1,
     };
     setColumns([...columns, newColumn]);
   }
@@ -133,6 +134,7 @@ export function KanbanBoard({
       columnId,
       title: `Task ${tasks.length + 1}`,
       content: "",
+      order: tasks.length + 1,
     };
 
     setTasks([...tasks, newTask]);
@@ -180,6 +182,8 @@ export function KanbanBoard({
       const activeColIdx = findIndex(columns, activeColId);
       const overColIdx = findIndex(columns, overColId);
 
+      // TODO: perform column reordering
+
       return arrayMove(columns, activeColIdx, overColIdx);
     });
   }
@@ -204,19 +208,21 @@ export function KanbanBoard({
         const overIdx = findIndex(tasks, overId);
 
         tasks[activeIdx]!.columnId = tasks[overIdx]!.columnId;
+        // TODO: perform task reordering
 
         return arrayMove(tasks, activeIdx, overIdx);
       });
     }
 
     const isOverColumn = over.data.current?.type === "Column";
-    // dropping a task over a column
 
+    // dropping a task over a column
     if (isActiveTask && isOverColumn) {
       setTasks((tasks) => {
         const activeIdx = findIndex(tasks, activeId);
 
         tasks[activeIdx]!.columnId = overId;
+        // TODO: perform task reordering
 
         return arrayMove(tasks, activeIdx, activeIdx);
       });

@@ -1,9 +1,7 @@
-import "@/lib/styles/globals.css";
-
-import { Inter } from "next/font/google";
-
-import { TRPCReactProvider } from "@/lib/trpc/react";
 import { ThemeProvider } from "@/components/theme-provider";
+import "@/lib/styles/globals.css";
+import { TRPCReactProvider } from "@/lib/trpc/react";
+import { Inter } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} bg-slate-500`}>
+      <body className={`font-sans ${inter.variable} bg-gray-800`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

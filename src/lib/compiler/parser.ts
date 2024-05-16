@@ -30,20 +30,21 @@ export function generateBoardData(allTokens: Token[][]): BoardData {
   const tasks: Task[] = [];
 
   let currentColIdx = 0;
+  let taskOrder = 0;
   for (const line of remainingTokens) {
     if (checkType(line, COLUMN.type)) {
-      // TODO: add order of column in board
-      const token = getToken(line);
-      const newColumn = makeColumn(token);
       currentColIdx = columns.length;
+      const token = getToken(line);
+      const newColumn = makeColumn(token, currentColIdx + 1);
       columns.push(newColumn);
+      taskOrder = 0;
       continue;
     }
     if (checkType(line, TASK.type)) {
-      // TODO: add order of task in column
       const tokens = getTokenPair(line);
-      const newTask = makeTask(columns[currentColIdx]!, tokens);
+      const newTask = makeTask(columns[currentColIdx]!, tokens, taskOrder);
       tasks.push(newTask);
+      taskOrder += 1;
       continue;
     }
   }
@@ -70,15 +71,20 @@ function getTokenPair(line: Token[]): [Token, Token] {
   return [line[0]!, line[1]!];
 }
 
-function makeColumn(token: Token): Column {
-  return { id: generateId(), title: token.value };
+function makeColumn(token: Token, order: number): Column {
+  return { id: generateId(), title: token.value, order };
 }
 
-function makeTask(column: Column, taskTokens: [Token, Token]): Task {
+function makeTask(
+  column: Column,
+  taskTokens: [Token, Token],
+  order: number,
+): Task {
   return {
     id: generateId(),
     columnId: column.id,
     title: taskTokens[0].value,
     content: taskTokens[1].value,
+    order,
   };
 }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateBoardData, generateTokenStream } from "@/lib/compiler";
 import { writeToFile } from "@/lib/compiler/decompiler";
-import { type BoardData } from "@/lib/types/token";
+import { type BoardData } from "@/lib/types";
 import { invoke } from "@tauri-apps/api";
 import { useState } from "react";
 
@@ -51,7 +51,6 @@ export default function Home() {
         write out
       </Button>
 
-      <Button onClick={handleClick}>greet</Button>
       <Input
         type="file"
         accept="txt"
