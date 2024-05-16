@@ -1,6 +1,6 @@
-# Kanban Board N.0 - todoer
+# Kanban
 
-Guys I had this great idea, what If I made my own todo app, then I'd finally be productive!
+Guys I had this great idea, what If I made my own todo app, then I'd finally be productive!1!
 
 ## TODO
 
